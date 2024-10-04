@@ -1,7 +1,9 @@
 const users = require('../db/dataBase');
+const bcrypt = require('bcryptjs');
 
 const createUserController = (name, username, email) => {
     const id = users.length + 1
+    const hashPassword = bcrypt.hash(password, 10)
     const newUser = { id, name, username, email };
     if (!name || !username || !email) throw new Error("Faltan datos");
     users.push(newUser);
