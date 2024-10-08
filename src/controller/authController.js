@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const users = require("../db/dataBase");
+const jwt = require("jsonwebtoken");
 
 const registerController = async (
   name,
@@ -27,9 +28,19 @@ const loginController = async (email, password) => {
   const isPasswordMatch = await bcrypt.compare(password, user.password); //comparamos la contraseña ingresada con la registrada
   if (!isPasswordMatch) {
     throw new Error("La contraseña introducida es incorrecta"); //si la clave es incorrecta, tira un error
-  } else {
-    return { message: "Inicio de sesion exitoso", user };
   }
+  // utilizamos Jsonwebtoken para generar un token segun el rol del usuario
+  const token = jwt.sign({ id: user.id, role: user.role }, "my_secret_key", {
+    expiresIn: "1h",
+  }); //la palabra secreta no debe ir aca sino en el archivo ENV
+
+  const { password: _, ...userWhitouthPassword } = user; //esto es para ocultar el password en el return para q sea mas seguro
+
+  return {
+    message: "Inicio de sesion exitoso",
+    token,
+    user: userWhitouthPassword,
+  };
 };
 
 module.exports = {
