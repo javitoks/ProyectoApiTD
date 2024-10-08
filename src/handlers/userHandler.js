@@ -44,12 +44,12 @@ const getOneHandler = (req, res) => {
   }
 };
 
-const createUserHandler = (req, res) => {
+const createUserHandler = async(req, res) => {
   try {
     const {error} = userSchema.validate(req.body);
     if (error) res.status(404).send(error.details[0].message);
     const { name, username, email, password, role} = req.body;
-    const response = createUserController(name, username, email, password, role);
+    const response = await  createUserController(name, username, email, password, role);
     res.status(201).send(response);
   } catch (error) {
     res.status(400).send({ Error: error.message });
