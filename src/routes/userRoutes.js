@@ -7,6 +7,7 @@ const {
     deleteUserHandler 
 } = require('../handlers/userHandler');
 const verifyToken = require('../middleware/verifyMiddleware');
+const authorizeAdmin = require('../middleware/authorizationMiddleware');
 const usersRouter = Router();
 
 
@@ -18,7 +19,7 @@ usersRouter.get('/:id', getOneHandler);
 
 usersRouter.post('/', createUserHandler);
 
-usersRouter.put('/:id',verifyToken,updateUserHandler);
+usersRouter.put('/:id',verifyToken,authorizeAdmin,updateUserHandler);
 
 usersRouter.delete('/:id', deleteUserHandler);
 
